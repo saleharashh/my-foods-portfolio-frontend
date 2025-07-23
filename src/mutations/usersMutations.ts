@@ -5,6 +5,7 @@ import { fetchClient } from "../utils/fetchClient";
 
 export const useUpdateUser = () => {
   const { token } = useAuth();
+  console.log(token);
   return useMutation<UpdateUserResponse, Error, UpdateUserBody>({
     mutationFn: (body) =>
       fetchClient(

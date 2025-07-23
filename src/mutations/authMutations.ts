@@ -7,10 +7,11 @@ import type {
 } from "../type/auth";
 import { useAuth } from "../contexts/AuthContext";
 import { fetchClient } from "../utils/fetchClient";
+import type { ApiResonse } from "../type/apiRespnse";
 
 export const useSendOtpMutation = () => {
   const { token } = useAuth();
-  return useMutation<SendOtpResponse, Error, SendOtpRequest>({
+  return useMutation<ApiResonse<SendOtpResponse>, Error, SendOtpRequest>({
     mutationFn: (body) =>
       fetchClient(
         "auth/send-otp",
@@ -25,7 +26,7 @@ export const useSendOtpMutation = () => {
 
 export const useVerifyOtpMutation = () => {
   const { token, setToken } = useAuth();
-  return useMutation<VerifyOtpResponse, Error, VerifyOtpRequest>({
+  return useMutation<ApiResonse<VerifyOtpResponse>, Error, VerifyOtpRequest>({
     mutationFn: (body) =>
       fetchClient(
         "auth/verify-otp",
@@ -35,8 +36,8 @@ export const useVerifyOtpMutation = () => {
         },
         token!!
       ),
-    onSuccess: (data) => {
-      setToken(data.token);
+    onSuccess: (res) => {
+      setToken(res.data.user?.token);
     },
   });
 };

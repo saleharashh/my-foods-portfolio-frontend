@@ -1,4 +1,5 @@
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Typography, Button, Box, Stack, TextField } from "@mui/material";
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSendOtpMutation } from "../mutations/authMutations";
@@ -7,37 +8,74 @@ const LoginPage = () => {
   const [value, setValue] = useState("");
   const navigate = useNavigate();
 
+  // console.log(value)
   const { mutate, isPending } = useSendOtpMutation();
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Typography variant="h5" gutterBottom>
-        Please Enter Your Phone Number
-      </Typography>
-      <TextField
-        label="Phone Number"
-        fullWidth
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <Button
-        variant="contained"
-        fullWidth
-        disabled={isPending}
-        onClick={() =>
-          mutate(
-            { phone: value },
-            {
-              onSuccess: () => {
-                navigate("/confirm-otp", { state: { phone: value } });
-              },
-            }
-          )
-        }
-      >
-        {isPending ? "Sending..." : "Send Code"}
-      </Button>
-    </Container>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* login image  */}
+      <Stack sx={{ width: "100%", height: "100vh" }} direction={"row"}>
+        <Box
+          sx={{ width: "50%", height: "100vh", backgroundColor: "#FFFFFF" }}
+        ></Box>
+        {/* login form */}
+        <Box
+          sx={{
+            width: "50%",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Stack
+            spacing={4}
+            direction={"column"}
+            alignItems={"center"}
+            sx={{ px: 7.5 }}
+          >
+            <Typography variant="h4">Welcome</Typography>
+            <Typography variant="caption" color="textSecondary" paddingX={5}>
+              Welcome to My Foods Please enter your phone
+            </Typography>
+            <TextField
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              sx={{ mx: 5 }}
+              label="Phone Number"
+              variant="outlined"
+              size="small"
+              fullWidth
+            />
+            <Button
+              variant="contained"
+              disabled={isPending}
+              onClick={() => {
+                mutate(
+                  { phone: value },
+                  {
+                    onSuccess: () => {
+                      navigate("/verify-otp", { state: { phone: value } });
+                    },
+                  }
+                );
+              }}
+              fullWidth
+            >
+              {isPending ? "Sending..." : "Send OTP"}
+            </Button>
+          </Stack>
+        </Box>
+      </Stack>
+    </Box>
   );
 };
 

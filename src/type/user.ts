@@ -1,8 +1,11 @@
 export interface User {
-  id: string;
+  id: number;
   name: string;
-  address: string;
-  phone: string;
+  email: string;
+  password: string;
+  token:string;
+  refreshToken:string;
+  createAt: Date;
 }
 
 export type UpdateUserResponse = {

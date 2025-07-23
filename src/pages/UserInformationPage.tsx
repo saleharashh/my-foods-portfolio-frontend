@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import type { UserFormData } from "../type/user";
 import { useGetUser, useUpdateUser } from "../mutations/usersMutations";
 
@@ -12,61 +12,61 @@ const UserInformationPage = () => {
 
   const { mutate } = useUpdateUser();
 
-  const getInfomutate = useGetUser().mutate;
-  const handleOnChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((perv) => ({ ...perv, [e.target.name]: e.target.value }));
-    console.log(formData);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    mutate(
-      { name: formData.name, address: formData.address },
-      {
-        onSuccess: (data) => {
-          console.log(data);
-        },
-      }
-    );
-  };
-  const handleClickInfo = () => {
-    getInfomutate(undefined, {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-    });
-  };
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="Name"
-          name="name"
-          value={formData.name}
-          onChange={handleOnChange}
-          margin="normal"
-          required
-        />
-        <TextField
-          fullWidth
-          label="address"
-          name="address"
-          value={formData.address}
-          onChange={handleOnChange}
-          margin="normal"
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Submit
-        </Button>
-      </form>
-
-      <Button variant="contained" color="primary" onClick={handleClickInfo}>
-        get info
-      </Button>
-    </>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* login image  */}
+      <Stack sx={{ width: "100%", height: "100vh" }} direction={"row"}>
+        <Box
+          sx={{ width: "50%", height: "100vh", backgroundColor: "#FFFFFF" }}
+        ></Box>
+        {/* login form */}
+        <Box
+          sx={{
+            width: "50%",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Stack
+            spacing={4}
+            direction={"column"}
+            alignItems={"center"}
+            sx={{ px: 7.5 }}
+          >
+            <Typography variant="h4">Welcome</Typography>
+            <Typography variant="caption" color="textSecondary" paddingX={5}>
+              Check Your Phone We Sent You a Verification Code
+            </Typography>
+            <TextField
+              sx={{ mx: 5 }}
+              label="Phone Number"
+              variant="outlined"
+              size="small"
+              fullWidth
+            />
+            <Button
+              variant="contained"
+              onClick={() => {
+                
+              }}
+              fullWidth
+            >
+              Verify OTP
+            </Button>
+          </Stack>
+        </Box>
+      </Stack>
+    </Box>
   );
 };
 
