@@ -3,12 +3,12 @@ import { Typography, Button, Box, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSendOtpMutation } from "../mutations/authMutations";
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {
   const [value, setValue] = useState("");
   const navigate = useNavigate();
-
-  // console.log(value)
+  const auth = useAuth();
   const { mutate, isPending } = useSendOtpMutation();
 
   return (

@@ -8,7 +8,9 @@ import {
 
 interface AuthContextType {
   token: string | undefined;
+  refreshToken: string | undefined;
   setToken: (token: string | undefined) => void;
+  setRefreshToken: (refreshToken: string | undefined) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,10 +20,15 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | undefined>(undefined);
+  const [refreshToken, setRefreshToken] = useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     if (savedToken) setToken(savedToken);
+    const savedRefreshToken = localStorage.getItem("refreshToken");
+    if (savedRefreshToken) setRefreshToken(savedRefreshToken);
   }, []);
 
   useEffect(() => {
@@ -30,10 +37,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } else {
       localStorage.removeItem("token");
     }
-  }, [token]);
+
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
+    } else {
+      localStorage.removeItem("refreshToken");
+    }
+  }, [token, refreshToken]);
 
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider
+      value={{ refreshToken, token, setRefreshToken, setToken }}
+    >
       {children}
     </AuthContext.Provider>
   );

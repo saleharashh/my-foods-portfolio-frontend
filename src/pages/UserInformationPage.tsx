@@ -1,7 +1,19 @@
-import { useState } from "react";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { useState, type ChangeEvent } from "react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import type { UserFormData } from "../type/user";
-import { useGetUser, useUpdateUser } from "../mutations/usersMutations";
+import { useUpdateUser } from "../mutations/usersMutations";
+import { useAuth } from "../contexts/AuthContext";
 
 const UserInformationPage = () => {
   const [formData, setFormData] = useState<UserFormData>({
@@ -9,9 +21,27 @@ const UserInformationPage = () => {
     name: "",
     address: "",
   });
-
   const { mutate } = useUpdateUser();
-
+  const handleNameOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    var newFormData = formData;
+    newFormData.name = e.target.value;
+    setFormData(newFormData);
+  };
+  const hanldeAddressOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    var newFormData = formData;
+    newFormData.address = e.target.value;
+    setFormData(newFormData);
+  };
+  const handleSubmit = () => {
+    mutate(
+      { address: formData.address, name: formData.name },
+      {
+        onSuccess: (data) => {
+          console.log(data.message);
+        },
+      }
+    );
+  };
   return (
     <Box
       sx={{
@@ -22,49 +52,32 @@ const UserInformationPage = () => {
         justifyContent: "center",
       }}
     >
-      {/* login image  */}
-      <Stack sx={{ width: "100%", height: "100vh" }} direction={"row"}>
-        <Box
-          sx={{ width: "50%", height: "100vh", backgroundColor: "#FFFFFF" }}
-        ></Box>
-        {/* login form */}
-        <Box
-          sx={{
-            width: "50%",
-            height: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Stack
-            spacing={4}
-            direction={"column"}
-            alignItems={"center"}
-            sx={{ px: 7.5 }}
-          >
-            <Typography variant="h4">Welcome</Typography>
-            <Typography variant="caption" color="textSecondary" paddingX={5}>
-              Check Your Phone We Sent You a Verification Code
-            </Typography>
-            <TextField
-              sx={{ mx: 5 }}
-              label="Phone Number"
-              variant="outlined"
-              size="small"
-              fullWidth
-            />
-            <Button
-              variant="contained"
-              onClick={() => {
-                
-              }}
-              fullWidth
-            >
-              Verify OTP
-            </Button>
-          </Stack>
-        </Box>
+      <Stack
+        direction={"column"}
+        width={"50%"}
+        alignItems={"start"}
+        spacing={4}
+      >
+        <Stack width={"100%"} alignItems={"center"} spacing={1}>
+          <Typography variant="h4">User Information</Typography>
+          <Typography variant="body2">Please enter your information</Typography>
+        </Stack>
+        <Stack direction={"column"} spacing={1} width={"100%"}>
+          <Typography variant="body2">Full Name:</Typography>
+          <TextField size="small" fullWidth onChange={handleNameOnChange} />
+        </Stack>
+        <Stack direction={"column"} spacing={1} width={"100%"}>
+          <Typography variant="body2">Address:</Typography>
+          <TextField
+            size="small"
+            multiline
+            fullWidth
+            onChange={hanldeAddressOnChange}
+          ></TextField>
+        </Stack>
+        <Button variant="contained" onClick={handleSubmit}>
+          Submit
+        </Button>
       </Stack>
     </Box>
   );

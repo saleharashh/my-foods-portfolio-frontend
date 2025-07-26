@@ -2,11 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "../contexts/AuthContext";
 import type { UpdateUserBody, UpdateUserResponse } from "../type/user";
 import { fetchClient } from "../utils/fetchClient";
+import type { ApiResonse } from "../type/apiRespnse";
 
 export const useUpdateUser = () => {
   const { token } = useAuth();
-  console.log(token);
-  return useMutation<UpdateUserResponse, Error, UpdateUserBody>({
+  return useMutation<ApiResonse<UpdateUserResponse>, Error, UpdateUserBody>({
     mutationFn: (body) =>
       fetchClient(
         "user/update-user",

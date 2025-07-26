@@ -19,3 +19,11 @@ export interface VerifyOtpResponse {
   user?: User;
   isNewUser: boolean;
 }
+
+export interface RefreshTokenResponse {
+  newToken: string;
+}
+
+export interface RefreshTokenBody {
+  refreshToken: string;
+}

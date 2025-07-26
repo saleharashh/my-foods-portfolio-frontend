@@ -1,8 +1,11 @@
 const BASE_URL = "http://localhost:5000/api/";
-
-export const fetchClient = async (url: string, options = {}, token: string) => {
-  // const token = localStorage.getItem("token"); // or from cookies, context, etc.
-
+import dayjs from "dayjs";
+import { jwtDecode } from "jwt-decode";
+export const fetchClient = async (
+  url: string,
+  options = {},
+  token: string,
+) => {
   const defaultHeaders = {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),

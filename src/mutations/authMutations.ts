@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import type {
+  RefreshTokenBody,
+  RefreshTokenResponse,
   SendOtpRequest,
   SendOtpResponse,
   VerifyOtpRequest,
@@ -40,4 +42,18 @@ export const useVerifyOtpMutation = () => {
       setToken(res.data.user?.token);
     },
   });
+};
+
+export const useRefreshToken = () => {
+  const { refreshToken } = useAuth();
+  return useMutation<ApiResonse<RefreshTokenResponse>, Error, RefreshTokenBody>(
+    {
+      mutationFn: (body) =>
+        fetchClient(
+          "auth/refresh-token",
+          { method: "POST", body: JSON.stringify(body) },
+          refreshToken!!
+        ),
+    }
+  );
 };

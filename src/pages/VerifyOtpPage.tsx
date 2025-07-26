@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRef, useState, type ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useVerifyOtpMutation } from "../mutations/authMutations";
@@ -16,9 +9,9 @@ const VerifyOtpPage = () => {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [OTP, setOTP] = useState("");
-  const { setToken } = useAuth();
+  const { setToken, setRefreshToken, refreshToken } = useAuth();
   const { mutate } = useVerifyOtpMutation();
+
   const handleOnchange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
@@ -46,6 +39,23 @@ const VerifyOtpPage = () => {
       setotp(newOtp);
       e.preventDefault();
     }
+  };
+
+  const handleVerify = () => {
+    mutate(
+      { code: otp.join(""), phone: state?.phone },
+      {
+        onSuccess: (data) => {
+          setToken(data.data.user?.token);
+          setRefreshToken(data.data.user?.refreshtoken);
+          // console.log("login response:", data);
+          // console.log(refreshToken)
+          if (data.data.isNewUser) {
+            navigate("/user-information");
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -108,22 +118,7 @@ const VerifyOtpPage = () => {
                 />
               ))}
             </Stack>
-            <Button
-              variant="contained"
-              onClick={() => {
-                mutate(
-                  { code: otp.join(''), phone: state?.phone },
-                  {
-                    onSuccess: (data) => {
-                      if (data.data.isNewUser) {
-                        navigate("user-information");
-                      }
-                    },
-                  }
-                );
-              }}
-              fullWidth
-            >
+            <Button variant="contained" onClick={handleVerify} fullWidth>
               Verify OTP
             </Button>
           </Stack>
