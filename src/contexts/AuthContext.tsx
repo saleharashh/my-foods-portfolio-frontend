@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 
-interface AuthContextType {
+export interface AuthContextType {
   token: string | undefined;
   refreshToken: string | undefined;
   setToken: (token: string | undefined) => void;

@@ -2,7 +2,7 @@ import { Typography, Button, Box, Stack, TextField } from "@mui/material";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSendOtpMutation } from "../mutations/authMutations";
+import { useSendOtpMutation } from "../requests/authMutations";
 import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {

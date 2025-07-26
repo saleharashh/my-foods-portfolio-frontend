@@ -1,7 +1,7 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRef, useState, type ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useVerifyOtpMutation } from "../mutations/authMutations";
+import { useVerifyOtpMutation } from "../requests/authMutations";
 import { useAuth } from "../contexts/AuthContext";
 
 const VerifyOtpPage = () => {
@@ -9,7 +9,7 @@ const VerifyOtpPage = () => {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { setToken, setRefreshToken, refreshToken } = useAuth();
+  const { setToken, setRefreshToken, refreshToken, token } = useAuth();
   const { mutate } = useVerifyOtpMutation();
 
   const handleOnchange = (
@@ -48,8 +48,7 @@ const VerifyOtpPage = () => {
         onSuccess: (data) => {
           setToken(data.data.user?.token);
           setRefreshToken(data.data.user?.refreshtoken);
-          // console.log("login response:", data);
-          // console.log(refreshToken)
+        
           if (data.data.isNewUser) {
             navigate("/user-information");
           }

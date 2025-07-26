@@ -5,25 +5,25 @@ import { fetchClient } from "../utils/fetchClient";
 import type { ApiResonse } from "../type/apiRespnse";
 
 export const useUpdateUser = () => {
-  const { token } = useAuth();
+  const auth = useAuth();
   return useMutation<ApiResonse<UpdateUserResponse>, Error, UpdateUserBody>({
     mutationFn: (body) =>
       fetchClient(
-        "user/update-user",
+        "user/get-user",
         { method: "POST", body: JSON.stringify(body) },
-        token!!
+        auth
       ),
   });
 };
 
 export const useGetUser = () => {
-  const { token } = useAuth();
+  const auth = useAuth();
   return useMutation<undefined, Error, undefined>({
     mutationFn: (body) =>
       fetchClient(
         "user/get-user",
         { method: "GET", body: JSON.stringify(body) },
-        token!!
+        auth
       ),
   });
 };

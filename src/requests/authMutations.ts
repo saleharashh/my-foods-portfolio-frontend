@@ -12,7 +12,7 @@ import { fetchClient } from "../utils/fetchClient";
 import type { ApiResonse } from "../type/apiRespnse";
 
 export const useSendOtpMutation = () => {
-  const { token } = useAuth();
+  const auth = useAuth();
   return useMutation<ApiResonse<SendOtpResponse>, Error, SendOtpRequest>({
     mutationFn: (body) =>
       fetchClient(
@@ -21,13 +21,13 @@ export const useSendOtpMutation = () => {
           method: "POST",
           body: JSON.stringify(body),
         },
-        token!!
+        auth
       ),
   });
 };
 
 export const useVerifyOtpMutation = () => {
-  const { token, setToken } = useAuth();
+  const auth = useAuth();
   return useMutation<ApiResonse<VerifyOtpResponse>, Error, VerifyOtpRequest>({
     mutationFn: (body) =>
       fetchClient(
@@ -36,24 +36,57 @@ export const useVerifyOtpMutation = () => {
           method: "POST",
           body: JSON.stringify(body),
         },
-        token!!
+        auth
       ),
     onSuccess: (res) => {
-      setToken(res.data.user?.token);
+      if (res.isSuccess) auth.setToken(res.data.user?.token);
+    },
+    onError: (err) => {
+      console.log(err.name);
     },
   });
 };
 
+// export const refreshTokenRequest = async (
+//   refreshToken: string
+// ): Promise<ApiResonse<RefreshTokenResponse>> => {
+//   const response = await fetch(`${BASE_URL}auth/refresh-token`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       ...(refreshToken && { Authorization: `Bearer ${refreshToken}` }),
+//     },
+//     body: JSON.stringify({ refreshToken }),
+//   });
+
+//   if (!response.ok) {
+//     const error = await response.json();
+//     throw new Error(error.message || "Failed to refresh token");
+//   }
+
+//   return response.json();
+// };
+
 export const useRefreshToken = () => {
-  const { refreshToken } = useAuth();
+  const auth = useAuth();
   return useMutation<ApiResonse<RefreshTokenResponse>, Error, RefreshTokenBody>(
     {
       mutationFn: (body) =>
         fetchClient(
           "auth/refresh-token",
           { method: "POST", body: JSON.stringify(body) },
-          refreshToken!!
+          auth
         ),
+      onSuccess: (res) => {
+        let currentToken = localStorage.getItem("token");
+
+        if (currentToken) {
+          auth.setToken(res.data.newToken);
+        }
+      },
+      onError: (err) => {
+        console.log(err.name);
+      },
     }
   );
 };

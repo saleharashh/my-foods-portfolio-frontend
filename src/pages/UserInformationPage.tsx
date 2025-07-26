@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import type { UserFormData } from "../type/user";
-import { useUpdateUser } from "../mutations/usersMutations";
+import { useUpdateUser } from "../requests/usersMutations";
 import { useAuth } from "../contexts/AuthContext";
 
 const UserInformationPage = () => {

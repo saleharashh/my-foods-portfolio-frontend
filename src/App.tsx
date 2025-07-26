@@ -1,38 +1,31 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import VerifyOtpPage from "./pages/VerifyOtpPage";
-
-import { useAuth } from "./contexts/AuthContext";
+import Appbar from "./components/Appbar";
 import UserInformationPage from "./pages/UserInformationPage";
-import { jwtDecode } from "jwt-decode";
-import dayjs from "dayjs";
-import { useRefreshToken } from "./mutations/authMutations";
+import HomePage from "./pages/HomePage";
+import OrdersPage from "./pages/OrdersPage";
+import MenuPage from "./pages/MenuPage";
+import AppbarWrapper from "./components/AppbarWrapper";
 const App = () => {
-  // localStorage.clear();
-  const auth = useAuth();
-
-  const { mutate } = useRefreshToken();
-
-  if (auth.token && dayjs.unix(jwtDecode(auth.token!).exp!).isBefore(dayjs())) {
-    mutate(
-      {
-        refreshToken: auth.refreshToken!,
-      },
-      {
-        onSuccess: (data) => {
-          auth.setToken(data.data.newToken);
-        },
-      }
-    );
-  }
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          // element={<UserInformationPage />}
-          element={<LoginPage />}
-        ></Route>
+        {/* routes with appbar */}
+        <Route element={<AppbarWrapper />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/menu" element={<MenuPage />} />
+        </Route>
+
+        {/* pages without appbar */}
+
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/verify-otp" element={<VerifyOtpPage />}></Route>
         <Route
           path="/user-information"
